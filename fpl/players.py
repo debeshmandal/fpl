@@ -1,4 +1,4 @@
-from .data import _elements
+from .data import _elements, _teams
 
 class Player:
     def __init__(self, index : int = None, name : str = None):
