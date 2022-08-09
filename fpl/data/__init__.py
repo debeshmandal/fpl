@@ -5,7 +5,7 @@ import pandas as pd
 ROOT = '/'.join(path.abspath(__file__).split('/')[:-1])
 
 
-with open(f'{ROOT}/2020.json', 'r') as f:
+with open(f'{ROOT}/2022.json', 'r') as f:
     static_2020 = json.load(f)
 
 TOTAL_PLAYERS = static_2020['total_players']

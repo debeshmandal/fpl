@@ -2,13 +2,15 @@ from .data import _teams
 from .players import Player
 
 class Team:
-    def __init__(self, index : int = None, name : str = None):
-        if not (index or name) or (index and name):
-            raise TypeError('Please give an index OR name')
-        if index:
+    def __init__(self, index: int = None, name: str = None):
+        if isinstance(index, int):
+            if name:
+                raise TypeError('index AND name provided - please provide only one.')
             row = _teams.loc[index]
         elif name:
             row = _teams[_teams['name']==name].reset_index(drop=True).loc[0]
+        else:
+            raise TypeError('Neither index nor name provided - please provide one.')
         self.series = row[[
                 'short_name',
                 'strength_attack_home',
@@ -41,5 +43,3 @@ class Team:
             'defence' : self.series['strength_defence_away'],
             'overall' : self.series['strength_overall_away']
         }
-
-
