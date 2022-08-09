@@ -1,2 +1,2 @@
-from .data import static_2020
+from .data import *
 
