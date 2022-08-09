@@ -1,2 +1,5 @@
+from fpl.teams import Team
+
 def test_placeholder_teams():
-    assert True
+    for i in range(20):
+        print(Team(i))
