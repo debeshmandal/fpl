@@ -10,14 +10,15 @@ class BootstrapStatic:
         # check year is correct
         assert year in self.YEARS
         self.year = year
-        self.data = self.read(year)
+        self.read()
 
     def read(self, year: int = None):
         """Read data from pre-loaded bootstrap-static files"""
         if not (year is None):
             self.year = year
-        with open(ROOT / str(self.year), 'r') as f:
+        with open(ROOT / f"{self.year}.json", 'r') as f:
             self.data = json.load(f)
+        return self.data
 
     @property
     def element_stats(self):
