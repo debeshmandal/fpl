@@ -1,18 +1,56 @@
-import os.path as path
+from pathlib import Path
 import json
 import pandas as pd
 
-ROOT = '/'.join(path.abspath(__file__).split('/')[:-1])
+ROOT = Path(__file__).parent
 
+class BootstrapStatic:
+    YEARS = [2020, 2021, 2022, 2023]
+    def __init__(self, year: int):
+        # check year is correct
+        assert year in self.YEARS
+        self.year = year
+        self.data = self.read(year)
 
-with open(f'{ROOT}/2022.json', 'r') as f:
-    static_2020 = json.load(f)
+    def read(self, year: int = None):
+        """Read data from pre-loaded bootstrap-static files"""
+        if not (year is None):
+            self.year = year
+        with open(ROOT / str(self.year), 'r') as f:
+            self.data = json.load(f)
 
-TOTAL_PLAYERS = static_2020['total_players']
-_element_stats = pd.DataFrame(static_2020['element_stats'])
-_element_types = pd.DataFrame(static_2020['element_types'])
-_elements = pd.DataFrame(static_2020['elements']).sort_values(by=['team', 'element_type', 'now_cost']).reset_index(drop=True)
-_events = static_2020['events']
-_settings = static_2020['game_settings']
-_phases = pd.DataFrame(static_2020['phases'])
-_teams = pd.DataFrame(static_2020['teams'])
+    @property
+    def element_stats(self):
+        return pd.DataFrame(self.data['element_stats'])
+
+    @property
+    def element_types(self):
+        return pd.DataFrame(self.data['element_types'])
+
+    @property
+    def elements(self):
+        return pd.DataFrame(
+            self.data['elements']
+        ).sort_values(
+            by=['team', 'element_type', 'now_cost']
+        ).reset_index(drop=True)
+
+    @property
+    def events(self):
+        return self.data['events']
+
+    @property
+    def settings(self):
+        return self.data['game_settings']
+
+    @property
+    def phases(self):
+        return pd.DataFrame(self.data['phases'])
+
+    @property
+    def teams(self):
+        return pd.DataFrame(self.data['teams'])
+
+    @property
+    def total_players(self):
+        return self.data['total_players']

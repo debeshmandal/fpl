@@ -23,5 +23,6 @@ setuptools.setup(
         'matplotlib',
         'scikit-learn',
         'tensorflow'
-    ]
+    ],
+    include_package_data = True
 )
