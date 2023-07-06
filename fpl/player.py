@@ -18,9 +18,12 @@ class BSPlayer(Player):
                 'Please give an index OR name'
             )
         if index:
-            row = bs.teams.loc[index]
+            row = bs.elements.loc[index]
         elif name:
-            row = bs.teams[
-                bs.teams['web_name']==name
-            ].reset_index(drop=True).loc[0]
+            try:
+                row = bs.elements[
+                    bs.elements['web_name']==name
+                ].reset_index(drop=True).loc[0]
+            except KeyError:
+                raise KeyError(f"{name} could not be found!")
         self.series = row
