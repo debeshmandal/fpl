@@ -1,2 +1,2 @@
-def test_placeholder_players():
+def test_players():
     assert True

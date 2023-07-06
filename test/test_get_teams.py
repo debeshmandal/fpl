@@ -1,4 +1,4 @@
-from fpl.teams import BSTeam, Team
+from fpl.team import BSTeam, Team
 from fpl import BootstrapStatic
 
 def test_Team():

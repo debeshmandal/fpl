@@ -1,6 +1,5 @@
 import pandas as pd
 from .data import BootstrapStatic
-from .players import Player
 
 class Team:
     def __init__(self, series: pd.Series):
@@ -28,6 +27,11 @@ class Team:
             'defence' : self.series['strength_defence_away'],
             'overall' : self.series['strength_overall_away']
         }
+
+    @property
+    def players(self):
+        raise NotImplementedError('Team.players must be implemented!')
+
 
 class BSTeam:
     def __init__(
