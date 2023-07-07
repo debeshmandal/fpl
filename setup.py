@@ -10,7 +10,7 @@ setuptools.setup(
     description="Fantasy API",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    packages=setuptools.find_packages(),
+    packages=setuptools.find_packages(exclude=['*test*']),
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
@@ -22,7 +22,8 @@ setuptools.setup(
         'numpy',
         'matplotlib',
         'scikit-learn',
-        'tensorflow'
+        'tensorflow',
+        'softnanotools'
     ],
     include_package_data = True
 )

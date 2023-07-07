@@ -4,9 +4,40 @@ from .player import Player
 from softnanotools.logger import Logger
 logger = Logger(__name__)
 
+class SquadRegistry:
+    N_PLAYERS_TOTAL = 15
+    N_GKP_TOTAL = 5
+    N_DEF_TOTAL = 5
+    N_MID_TOTAL = 5
+    N_FWD_TOTAL = 5
+    N_PLAYERS_START = 15
+    N_GKP_START = 5
+    N_DEF_START = 5
+    N_MID_START = 5
+    N_FWD_START = 5
+    N_TEAMS = 3
+    MAX_PRICE = 1000
+
 class Squad:
-    def __init__(self, *players: Player):
+    def __init__(self, *players: Player, is_starters: bool = False):
         self.players = players
+        self.starters = [False for _ in players]
+        self._max_price = SquadRegistry.MAX_PRICE
+        self._n_teams = SquadRegistry.N_TEAMS
+
+        if is_starters:
+            self._n_players = SquadRegistry.N_PLAYERS_START
+            self._n_gkp = SquadRegistry.N_GKP_START
+            self._n_def = SquadRegistry.N_DEF_START
+            self._n_mid = SquadRegistry.N_MID_START
+            self._n_fwd = SquadRegistry.N_FWD_START
+
+        else:
+            self._n_players = SquadRegistry.N_PLAYERS_TOTAL
+            self._n_gkp = SquadRegistry.N_GKP_TOTAL
+            self._n_def = SquadRegistry.N_DEF_TOTAL
+            self._n_mid = SquadRegistry.N_MID_TOTAL
+            self._n_fwd = SquadRegistry.N_FWD_TOTAL
 
     @property
     def positions(self):
@@ -20,6 +51,32 @@ class Squad:
         }
         for p in self.players:
             result[keys[p.series['element_type']]] += 1
+        return result
+
+    @property
+    def starting_team(self):
+        result = []
+        for i, s in enumerate(self.starters):
+            if s:
+                result.append(self.players[i])
+        return Squad(*result, is_starters=True)
+
+    @property
+    def teams(self):
+        result = {}
+        for p in self.players:
+            t = p.series['team']
+            if result.get(t):
+                result[t] += 1
+            else:
+                result[t] = 1
+        return result
+
+    @property
+    def price(self):
+        result = 0
+        for p in self.players:
+            result += p.series['now_cost']
         return result
 
     def checks(self, *opt: str):
@@ -64,6 +121,19 @@ class Squad:
         if len(self.players) < 3: return False
         pos = self.positions
         return pos['fwd'] == 3
+
+    @property
+    def check_teams(self):
+        result = True
+        for v in self.teams.values():
+            if v > 3:
+                result = False
+        return result
+
+    @property
+    def check_price(self):
+        return self.price <= self._max_price
+
 
 if __name__ == '__main__':
     import doctest
